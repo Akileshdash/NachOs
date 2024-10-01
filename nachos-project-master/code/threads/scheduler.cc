@@ -32,6 +32,7 @@
 Scheduler::Scheduler() {
     readyList = new List<Thread *>;
 	sleepList = new List<Thread *>;
+    // priorityQueue = new priority_queue<Thread*, vector<Thread*>, PriorityThread>;
     toBeDestroyed = NULL;
 }
 
@@ -55,6 +56,7 @@ void Scheduler::ReadyToRun(Thread *thread) {
     DEBUG(dbgThread, "Putting thread on ready list: " << thread->getName());
     thread->setStatus(READY);
     readyList->Append(thread);
+    priorityQueue.push(thread);
 }
 
 //----------------------------------------------------------------------
@@ -71,7 +73,10 @@ Thread *Scheduler::FindNextToRun() {
     if (readyList->IsEmpty()) {
         return NULL;
     } else {
-        return readyList->RemoveFront();
+        readyList->RemoveFront();
+        Thread* T = priorityQueue.top();
+        priorityQueue.pop();
+        return T;
     }
 }
 
@@ -115,6 +120,7 @@ void Scheduler::Run(Thread *nextThread, bool finishing) {
 
     DEBUG(dbgThread, "Switching from: " << oldThread->getName()
                                         << " to: " << nextThread->getName());
+    cout<<"\nSwitching from: "<<oldThread->getName() << " to: " << nextThread->getName()<<endl;
 
     // This is a machine-dependent assembly language routine defined
     // in switch.s.  You may have to think

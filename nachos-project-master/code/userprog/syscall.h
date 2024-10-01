@@ -50,6 +50,7 @@
 #define SC_GetPid 54
 #define SC_Mul 55
 #define SC_Sleep 56
+#define SC_ExecP 57
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -102,7 +103,9 @@ typedef int ThreadId;
 /* Run the specified executable, with no args */
 /* This can be implemented as a call to ExecV.
  */
-SpaceId Exec(char *exec_name);
+SpaceId Exec    (char *exec_name);
+
+SpaceId ExecP(char *exec_name, int priority);
 
 /* Run the executable, stored in the Nachos file "argv[0]", with
  * parameters stored in argv[1..argc-1] and return the

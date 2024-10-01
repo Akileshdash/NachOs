@@ -91,6 +91,14 @@ Exec:
 	j	$31
 	.end Exec
 
+	.globl ExecP
+	.ent	ExecP
+ExecP:
+	addiu $2,$0,SC_ExecP
+	syscall
+	j	$31
+	.end Exec
+
 	.globl ExecV
 	.ent	ExecV
 ExecV:

@@ -16,10 +16,9 @@ int main() {
 	PrintNum(result);
 	PrintString("\n");
 	*/
-	PrintString("Before\n");
-	Sleep(5000000);
-	PrintString("Bye\n");
-	PrintString("Hello");	
-    Halt();
+	PrintString("In Add\n");
+	Sleep(50000000);
+	PrintString("Bye Add\n");
+    // Halt();
     /* not reached */
 }
