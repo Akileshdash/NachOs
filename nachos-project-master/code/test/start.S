@@ -292,6 +292,15 @@ Wait:
 	j	$31
 	.end Wait
 
+
+.globl Wait2
+	.ent	Wait2
+Wait2:
+	addiu $2,$0,SC_Wait2
+	syscall
+	j	$31
+	.end Wait2
+
 	.globl Signal
 	.ent	Signal
 Signal:

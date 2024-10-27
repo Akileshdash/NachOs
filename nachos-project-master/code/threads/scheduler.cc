@@ -32,6 +32,7 @@
 Scheduler::Scheduler() {
     readyList = new List<Thread *>;
     // priorityQueue = new priority_queue<Thread*, vector<Thread*>, PriorityThread>;
+    waitList = new List<Thread *>;/* code added by me*/
     sleepList = new sleepNode(); /* code added by me*/
     toBeDestroyed = NULL;
 }
@@ -74,6 +75,42 @@ void Scheduler::ReadyToSleep(Thread *thread,int time)
        sleepList = sleepProcess;
       // timeLeft = time;
 }
+
+/* code added by me starts here */
+ void Scheduler::ReadyToWait(Thread* thread, int pid)
+ {  
+    thread->waitID = pid;
+    waitList->Append(thread);
+ }
+/* code added by me ends here */
+// code added by me starts here
+void Scheduler::checkWait(Thread* thread)
+{  //   printf("i am in checkwait start\n");
+     ListIterator<Thread *> *itr = new ListIterator<Thread *>(waitList);
+      Thread *c=nullptr;
+      List<Thread *> *empty = new List<Thread *>();
+    //   int max = 100;
+      while(!itr->IsDone())
+      {
+        c = itr->Item();
+    //    cout<<"i am in checkwait\n";
+        if(thread->processID == c->waitID)
+        {   
+            kernel->scheduler->ReadyToRun(c);
+        //    printf("i am in checkwait\n");
+            empty->Append(c);
+        }
+        itr->Next();
+      }
+      delete itr;
+      itr = new ListIterator<Thread *>(empty);
+      while(!itr->IsDone())
+      {
+        waitList->Remove(itr->Item());
+        itr->Next();
+      }
+}
+// code added by me ends here.
 
 //----------------------------------------------------------------------
 // Scheduler::FindNextToRun
@@ -185,6 +222,9 @@ void Scheduler::CheckToBeDestroyed() {
 void Scheduler::Print() {
     cout << "Ready list contents:\n";
     readyList->Apply(ThreadPrint);
+    printf("\nWaitlist:");
+    waitList->Apply(ThreadPrint);
+    printf("\n");
 }
 
 void Scheduler::waitUntil(int x){
