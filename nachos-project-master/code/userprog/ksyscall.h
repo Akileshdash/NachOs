@@ -40,6 +40,21 @@ kernel->interrupt->SetLevel(currentState);
 }
 int SysAdd(int op1, int op2) { return op1 + op2; }
 int SysMul(int op1, int op2) {return op1 * op2; }
+
+void SysWait2(int pid)
+{
+  //Thread *c = kernel->pTab->getThread(pid);
+//   int pid2 = kernel->currentThread->processID;
+  kernel->scheduler->ReadyToWait(kernel->currentThread,pid);
+  
+  auto currentState = kernel->interrupt->SetLevel(IntOff);
+  kernel->currentThread->Sleep(false);
+  kernel->interrupt->SetLevel(currentState);
+  return;
+}
+// code added by me ends here
+
+
 int SysReadNum() {
     readUntilBlank();
 

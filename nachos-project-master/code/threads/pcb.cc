@@ -8,6 +8,10 @@ PCB::PCB(int id) {
     multex = new Semaphore("multex", 1);
 }
 
+Thread* PCB::getThr(){
+    return thread;
+}
+
 PCB::~PCB() {
     delete joinsem;
     delete exitsem;

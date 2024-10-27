@@ -178,6 +178,17 @@ void handle_SC_Add() {
     return move_program_counter();
 }
 
+void handle_SC_Wait2() {
+    
+    /* Process SysAdd Systemcall*/
+     SysWait2( /* int op1 */ (int)kernel->machine->ReadRegister(4));
+
+  //  DEBUG(dbgSys, "Sleep returning with " << result << "\n");
+    /* Prepare Result */
+   // kernel->machine->WriteRegister(2, (int)result);
+
+    return move_program_counter();
+}
 void handle_SC_ReadNum() {
     int result = SysReadNum();
     kernel->machine->WriteRegister(2, result);
@@ -479,6 +490,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_Add();
 				case SC_Mul:
 					return handle_SC_Mul();
+                case SC_Wait2:
+                     return handle_SC_Wait2();
                 case SC_ReadNum:
                     return handle_SC_ReadNum();
                 case SC_PrintNum:

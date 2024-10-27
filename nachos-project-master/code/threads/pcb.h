@@ -24,6 +24,7 @@ class PCB {
     int ExecP(char* filename, int id, int priority);
     int GetID();
     int GetNumWait();
+    Thread* getThr();
 
     void JoinWait();
     void ExitWait();
