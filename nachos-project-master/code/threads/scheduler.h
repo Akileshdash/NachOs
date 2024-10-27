@@ -18,6 +18,16 @@
 // The following class defines the scheduler/dispatcher abstraction --
 // the data structures and operations needed to keep track of which
 // thread is running, and which threads are ready but not running.
+
+/* code added by me starts here */
+  struct sleepNode{
+     Thread* process;
+     int timeLeft =0;
+     struct sleepNode* nextProcess;
+    };
+/* code added by me ends here */
+
+
 class PriorityThread {
    public:
     bool operator()(Thread*& t1, Thread*& t2) {
@@ -30,6 +40,7 @@ class Scheduler {
     ~Scheduler();  // De-allocate ready list
 
     void ReadyToRun(Thread* thread);
+    void ReadyToSleep(Thread* thread, int time);  /* code added by me */
     // Thread can be dispatched.
     Thread* FindNextToRun();  // Dequeue first thread on the ready
                               // list, if any, and return thread.
@@ -38,13 +49,14 @@ class Scheduler {
     void CheckToBeDestroyed();  // Check if thread that had been
                                 // running needs to be deleted
     void Print();               // Print contents of ready list
+
+    struct sleepNode* sleepList; /* code added by me */
 	void waitUntil(int x);
     // SelfTest for scheduler is implemented in class Thread
     void checkSleepList();
    private:
     List<Thread*>* readyList;  // queue of threads that are ready to run,
     priority_queue<Thread*, vector<Thread*>, PriorityThread> priorityQueue;
-	List<Thread*>* sleepList;                               // but not running
     Thread* toBeDestroyed;     // finishing thread to be destroyed
                                // by the next thread that runs
 };

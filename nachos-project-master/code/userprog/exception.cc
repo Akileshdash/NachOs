@@ -138,8 +138,10 @@ void handle_SC_Halt() {
 }
 
 void handle_SC_Sleep(){
-	int time = kernel->machine->ReadRegister(4);
-	SysSleep(time);
+    DEBUG(dbgSys, "Sleep " << kernel->machine->ReadRegister(4) << "\n");
+	// int time = kernel->machine->ReadRegister(4);
+     SysSleep( /* int op1 */ (int)kernel->machine->ReadRegister(4));
+	// SysSleep(time);
 	return move_program_counter();
 }
 

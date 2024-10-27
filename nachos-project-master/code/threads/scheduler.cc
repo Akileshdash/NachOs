@@ -31,8 +31,8 @@
 
 Scheduler::Scheduler() {
     readyList = new List<Thread *>;
-	sleepList = new List<Thread *>;
     // priorityQueue = new priority_queue<Thread*, vector<Thread*>, PriorityThread>;
+    sleepList = new sleepNode(); /* code added by me*/
     toBeDestroyed = NULL;
 }
 
@@ -57,6 +57,22 @@ void Scheduler::ReadyToRun(Thread *thread) {
     thread->setStatus(READY);
     readyList->Append(thread);
     priorityQueue.push(thread);
+}
+
+
+
+/* code added by Akilesh starts here */
+void Scheduler::ReadyToSleep(Thread *thread,int time)
+{
+
+     // ASSERT(kernel->interrupt->getLevel() == IntOff);
+       DEBUG(dbgThread, "Putting thread on sleep list: " << thread->getName());
+       struct sleepNode* sleepProcess = new sleepNode();
+       sleepProcess->nextProcess = sleepList;
+       sleepProcess->process = thread;
+       sleepProcess->timeLeft = time;
+       sleepList = sleepProcess;
+      // timeLeft = time;
 }
 
 //----------------------------------------------------------------------
@@ -173,31 +189,31 @@ void Scheduler::Print() {
 
 void Scheduler::waitUntil(int x){
 	kernel->currentThread->sleepTime = x;
-	sleepList->Append(kernel->currentThread);
+	// sleepList->Append(kernel->currentThread);
     kernel->currentThread->Sleep(false);
 
 }
 
-void Scheduler::checkSleepList(){
-		ListIterator<Thread*>* itr = new ListIterator<Thread*>(sleepList);
-		Thread* c;
-		List<Thread*>* delList = new List<Thread*>();
-		while(!itr->IsDone()){
-			c = itr->Item();
-            c->sleepTime--;
-			if (c->sleepTime<=0){
-				kernel->scheduler->ReadyToRun(c);
-				delList->Append(c);
-			}
-			itr->Next();
-        }
+// void Scheduler::checkSleepList(){
+// 		ListIterator<Thread*>* itr = new ListIterator<Thread*>(sleepList);
+// 		Thread* c;
+// 		List<Thread*>* delList = new List<Thread*>();
+// 		while(!itr->IsDone()){
+// 			c = itr->Item();
+//             c->sleepTime--;
+// 			if (c->sleepTime<=0){
+// 				kernel->scheduler->ReadyToRun(c);
+// 				delList->Append(c);
+// 			}
+// 			itr->Next();
+//         }
 		
-		delete itr;
-		itr = new ListIterator<Thread*>(delList);
+// 		delete itr;
+// 		itr = new ListIterator<Thread*>(delList);
 		
-		while(!itr->IsDone()){
-			sleepList->Remove(itr->Item());
-			itr->Next();
-		}
+// 		while(!itr->IsDone()){
+// 			// sleepList->Remove(itr->Item());
+// 			itr->Next();
+// 		}
 
-}
+// }

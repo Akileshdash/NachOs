@@ -48,10 +48,10 @@
 #define SC_Wait 52
 #define SC_Signal 53
 #define SC_GetPid 54
-#define SC_Mul 55
-#define SC_Sleep 56
-#define SC_ExecP 57
-#define SC_PrintHashString 58
+#define SC_Mul 55       /* code added by me*/
+#define SC_Sleep 56     /* code added by me*/
+#define SC_ExecP 57     /* code added by me*/
+#define SC_PrintHashString 58       /* code added by me*/
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -74,7 +74,7 @@ void Halt();
 int Add(int op1, int op2);
 int Mul(int,int);
 
-void Sleep(int);
+void Sleep(int ticks);
 
 int ReadNum();
 

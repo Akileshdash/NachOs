@@ -25,10 +25,18 @@ void SysHalt() {
 		printf("%f sec\n",ans);
 		kernel->interrupt->Halt(); 
 }
-void SysSleep(int time){
-		IntStatus oldlevel = kernel->interrupt->SetLevel(IntOff);
-		kernel->scheduler->waitUntil(time);
-		kernel->interrupt->SetLevel(oldlevel);
+// void SysSleep(int time){
+// 		IntStatus oldlevel = kernel->interrupt->SetLevel(IntOff);
+// 		kernel->scheduler->waitUntil(time);
+// 		kernel->interrupt->SetLevel(oldlevel);
+// }
+
+/*AKILESH*/
+void SysSleep(int op1) {
+kernel->scheduler->ReadyToSleep(kernel->currentThread,op1);
+auto currentState = kernel->interrupt->SetLevel(IntOff);
+kernel->currentThread->Sleep(false);
+kernel->interrupt->SetLevel(currentState);
 }
 int SysAdd(int op1, int op2) { return op1 + op2; }
 int SysMul(int op1, int op2) {return op1 * op2; }

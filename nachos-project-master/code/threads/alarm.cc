@@ -41,13 +41,49 @@ Alarm::Alarm(bool doRandom) { timer = new Timer(doRandom, this);}
 //----------------------------------------------------------------------
 
 void Alarm::CallBack() {
+    // code added by me starts here 
+	// if(time2 ==0 )
+	// {
+    //   time2 = clock();
+	// }
+	// else{
+	// 	time2 = clock();
+	// 	float ans = float(time2-time1)/CLOCKS_PER_SEC;
+	// 	time1 = time2;
+	// 	printf("time taken: %f\n",ans);
+	// }
+	struct sleepNode* temp =kernel->scheduler->sleepList;
+	struct sleepNode* prev = NULL;
+	while(temp != NULL)
+	{
+        temp->timeLeft--;
+	  if(temp->timeLeft==0)
+	  {
+        kernel->scheduler->ReadyToRun(temp->process);
+	  if(prev != NULL){
+				prev->nextProcess = temp->nextProcess;
+			} else{
+				kernel->scheduler->sleepList = temp->nextProcess;
+			}
+			struct sleepNode* temp1 = temp;
+			temp = temp->nextProcess;
+			free(temp1);
+		} else{
+			prev = temp;
+			temp = temp->nextProcess;
+		}
+    }
+   // free(temp);
+   // code added by me starts here 
+
     Interrupt *interrupt = kernel->interrupt;
-    MachineStatus status = interrupt->getStatus();	
-    kernel->scheduler->checkSleepList();
-	if (status != IdleMode) {
+    MachineStatus status = interrupt->getStatus();
+
+    if (status != IdleMode) {
         interrupt->YieldOnReturn();
     }
 }
+
 
 void Alarm::WaitUntil(int x){
 	
