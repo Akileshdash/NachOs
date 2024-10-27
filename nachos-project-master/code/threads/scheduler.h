@@ -41,6 +41,8 @@ class Scheduler {
 
     void ReadyToRun(Thread* thread);
     void ReadyToSleep(Thread* thread, int time);  /* code added by me */
+    void ReadyToWait(Thread* thread, int pid);    /* code added by me */
+    void checkWait(Thread* thread);  /* code added by me */
     // Thread can be dispatched.
     void ReadyToWait(Thread* thread, int pid);    /* code added by me */
     void checkWait(Thread* thread);  /* code added by me */

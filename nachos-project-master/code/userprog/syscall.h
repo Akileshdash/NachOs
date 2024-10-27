@@ -73,6 +73,7 @@ void Halt();
  */
 
 int Add(int op1, int op2);
+
 int Mul(int,int);
 
 void Sleep(int ticks);

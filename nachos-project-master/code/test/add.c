@@ -12,9 +12,9 @@ int main() {
     result = Add(41, 57);
 	PrintString("After Addition : \n");
 	PrintNum(result);
-	PrintString("\n");  
-	
-	PrintString("Add Done\n");
+    // Sleep(100000);
+	PrintString("\n");
+	PrintString("Addition Done\n");
     // Halt();
     /* not reached */
 }

@@ -17,6 +17,15 @@ int main() {
         PrintNum(pid);
     }
     // else
+    int i;
+    int u=10;
+    //For Wait2 a process completes
+    pid = Exec("../test/num_io");
+    if (pid < 0) {
+        Write("Exec failed: ", 14, stdout);
+        PrintNum(pid);
+    }
+    // else
     //     Join(pid);
     // int i;
     // pid = ExecP("../test/num_io",1);
