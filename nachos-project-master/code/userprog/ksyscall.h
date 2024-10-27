@@ -140,6 +140,13 @@ char* SysReadString(int length) {
 
 void SysPrintString(char* buffer, int length) {
     for (int i = 0; i < length; i++) {
+			// if (buffer[i]==' ') kernel->synchConsoleOut->PutChar('#');
+			// else kernel->synchConsoleOut->PutChar(buffer[i]);
+             kernel->synchConsoleOut->PutChar(buffer[i]);
+    }
+}
+void SysPrintHashString(char* buffer, int length) {
+    for (int i = 0; i < length; i++) {
 			if (buffer[i]==' ') kernel->synchConsoleOut->PutChar('#');
 			else kernel->synchConsoleOut->PutChar(buffer[i]);
     }

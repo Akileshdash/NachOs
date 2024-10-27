@@ -51,6 +51,7 @@
 #define SC_Mul 55
 #define SC_Sleep 56
 #define SC_ExecP 57
+#define SC_PrintHashString 58
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos

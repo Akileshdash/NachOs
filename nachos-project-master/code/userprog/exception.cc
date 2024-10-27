@@ -230,6 +230,15 @@ void handle_SC_PrintString() {
     return move_program_counter();
 }
 
+
+void handle_SC_PrintHashString() {
+    int memPtr = kernel->machine->ReadRegister(4);  // read address of C-string
+    char* buffer = stringUser2System(memPtr);
+
+    SysPrintHashString(buffer, strlen(buffer));
+    delete[] buffer;
+    return move_program_counter();
+}
 void handle_SC_CreateFile() {
     int virtAddr = kernel->machine->ReadRegister(4);
     char* fileName = stringUser2System(virtAddr);
@@ -482,6 +491,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_ReadString();
                 case SC_PrintString:
                     return handle_SC_PrintString();
+                case SC_PrintHashString:
+                    return handle_SC_PrintHashString();
                 case SC_CreateFile:
                     return handle_SC_CreateFile();
                 case SC_Open:

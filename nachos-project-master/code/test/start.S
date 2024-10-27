@@ -259,6 +259,15 @@ PrintString:
 	j	$31
 	.end PrintString
 
+
+	.globl PrintHashString
+	.ent PrintHashString
+PrintHashString:
+	addiu $2,$0,SC_PrintHashString
+	syscall
+	j	$31
+	.end PrinHashtString
+
 	.globl CreateFile
 	.ent	CreateFile
 CreateFile:

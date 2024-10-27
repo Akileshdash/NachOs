@@ -9,16 +9,12 @@
 
 int main() {
     int result;
-
-	/*
-    result = Mul(41, 57);
-	PrintString("Hello World ");
+    result = Add(41, 57);
+	PrintString("After Addition : \n");
 	PrintNum(result);
 	PrintString("\n");
-	*/
-	PrintString("In Add\n");
-	Sleep(50000000);
-	PrintString("Bye Add\n");
+	
+	PrintString("Add Done\n");
     // Halt();
     /* not reached */
 }
