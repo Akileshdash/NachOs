@@ -126,10 +126,35 @@ Thread *Scheduler::FindNextToRun() {
     if (readyList->IsEmpty()) {
         return NULL;
     } else {
-        readyList->RemoveFront();
-        Thread* T = priorityQueue.top();
-        priorityQueue.pop();
-        return T;
+
+        // readyList->RemoveFront();
+        // Thread* T = priorityQueue.top();
+        // priorityQueue.pop();
+        // return T;
+        ListIterator<Thread *> *itr = new ListIterator<Thread *>(readyList);
+        Thread *c=nullptr, *c1=nullptr;
+        int max = 100;
+        while(!itr->IsDone())
+        {
+            c = itr->Item();
+            if(max>c->pri)
+            {
+                max = c->pri;
+                c1 = c;
+            }
+            itr->Next();
+        }
+        delete itr;
+        
+        readyList->Remove(c1);
+        return c1;
+        // Thread *c1;
+        // c1 = priorityList.top();
+        // priorityList.pop();
+        // readyList->Remove(c1);
+        //   return c1;
+        //return readyList->RemoveFront();
+        
     }
 }
 

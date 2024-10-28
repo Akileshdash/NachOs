@@ -53,6 +53,12 @@ class Scheduler {
     void Print();               // Print contents of ready list
 
     struct sleepNode* sleepList; /* code added by me */
+    struct CompareThreads {
+        bool operator()(Thread* thread1, Thread* thread2) {
+            // For max-heap: return true if thread1 should go after thread2
+            return thread1->pri > thread2->pri;
+        }
+    };
     List<Thread*>* waitList; /* code added by me*/
     void waitUntil(int x);
     // SelfTest for scheduler is implemented in class Thread

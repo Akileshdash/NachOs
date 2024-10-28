@@ -14,12 +14,15 @@ int main() {
     // commented by me
     //PrintNum(ReadNum()); 
     // added by me
+
+    // For Priority Scheduling Uncomment the below code
     int pid;
     int i;
     int u =10;
     PrintString("start-In Prog: num_io.c\n");
-    pid = Exec("../test/add");  
-    Wait2(pid);
+    // pid = Exec("../test/add");       //For Normal ,without priority Executing 
+    pid = Exec2("../test/add",1);       // For Priority Executing and 1 is the priority number
+    // Wait2(pid);
     //  pid = Exec("../test/add");
     
     if (pid < 0) {

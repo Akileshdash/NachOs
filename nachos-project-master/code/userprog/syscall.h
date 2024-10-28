@@ -53,6 +53,7 @@
 #define SC_ExecP 57     /* code added by me*/
 #define SC_PrintHashString 58       /* code added by me*/
 #define SC_Wait2 59                 /* code added by me*/
+#define SC_Exec2 60
 #ifndef IN_ASM
 
 /* The system call interface.  These are the operations the Nachos
@@ -109,6 +110,8 @@ typedef int ThreadId;
 /* This can be implemented as a call to ExecV.
  */
 SpaceId Exec    (char *exec_name);
+
+int Exec2(char *exec_name, int pri);
 
 SpaceId ExecP(char *exec_name, int priority);
 

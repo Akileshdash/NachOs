@@ -243,6 +243,16 @@ int SysExec(char* name) {
     // Return child process id
     return kernel->pTab->ExecUpdate(name);
 }
+int SysExec2(char* name,int pri) {
+    OpenFile* oFile = kernel->fileSystem->Open(name);
+    if (oFile == NULL) {
+        DEBUG(dbgSys, "\nExec:: Can't open this file.");
+        return -1;
+    }
+    delete oFile;
+    return kernel->pTab->ExecUpdate2(name,pri);
+}
+
 int SysExecP(char* name, int priority = 10) {
     OpenFile* oFile = kernel->fileSystem->Open(name);
     if (oFile == NULL) {

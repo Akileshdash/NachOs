@@ -355,6 +355,28 @@ void handle_SC_Exec() {
     return move_program_counter();
 }
 
+void handle_SC_Exec2() {
+    int virtAddr;
+    // Read the virtual address of the program name from register r4
+    virtAddr = kernel->machine->ReadRegister(4);  
+    // Convert the user program name from virtual address to system space
+    char* name = stringUser2System(virtAddr);  
+    if (name == NULL) {
+        // If name is NULL, handle the error and exit
+        DEBUG(dbgSys, "\n Not enough memory in System");
+        ASSERT(false);
+        kernel->machine->WriteRegister(2, -1);
+        return move_program_counter();
+    }
+    // Read the priority value from register r5
+    int priority = (int)kernel->machine->ReadRegister(5);
+    // Pass both name and priority to SysExec2 and write the result to r2
+    kernel->machine->WriteRegister(2, SysExec2(name, priority)); 
+    // Return and move the program counter
+    return move_program_counter();
+}
+
+
 void handle_SC_ExecP() {
     int virtAddr;
     virtAddr = kernel->machine->ReadRegister(
@@ -520,6 +542,8 @@ void ExceptionHandler(ExceptionType which) {
                     return handle_SC_Seek();
                 case SC_Exec:
                     return handle_SC_Exec();
+                case SC_Exec2:
+                    return handle_SC_Exec2();
                 case SC_ExecP:
                     return handle_SC_ExecP();
                 case SC_Join:
