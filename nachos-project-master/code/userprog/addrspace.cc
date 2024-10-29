@@ -103,6 +103,7 @@ AddrSpace::~AddrSpace() {
 
 AddrSpace::AddrSpace(char *fileName) {
     OpenFile *executable = kernel->fileSystem->Open(fileName);
+    fileNameMain = fileName;
     NoffHeader noffH;
     unsigned int i, size, j, offset;
     unsigned int numCodePage,
@@ -150,7 +151,7 @@ AddrSpace::AddrSpace(char *fileName) {
         pageTable[i].virtualPage = i;  // for now, virtual page # = phys page #
         pageTable[i].physicalPage = kernel->gPhysPageBitMap->FindAndSet();
         // cerr << pageTable[i].physicalPage << endl;
-        pageTable[i].valid = TRUE;
+        pageTable[i].valid = FALSE;     //made changes by me
         pageTable[i].use = FALSE;
         pageTable[i].dirty = FALSE;
         pageTable[i].readOnly = FALSE;  // if the code segment was entirely on
@@ -163,21 +164,21 @@ AddrSpace::AddrSpace(char *fileName) {
         DEBUG(dbgAddr, "phyPage " << pageTable[i].physicalPage);
     }
 
-    if (noffH.code.size > 0) {
-        for (i = 0; i < numPages; i++)
-            executable->ReadAt(
-                &(kernel->machine->mainMemory[noffH.code.virtualAddr]) +
-                    (pageTable[i].physicalPage * PageSize),
-                PageSize, noffH.code.inFileAddr + (i * PageSize));
-    }
+    // if (noffH.code.size > 0) {
+    //     for (i = 0; i < numPages; i++)
+    //         executable->ReadAt(
+    //             &(kernel->machine->mainMemory[noffH.code.virtualAddr]) +
+    //                 (pageTable[i].physicalPage * PageSize),
+    //             PageSize, noffH.code.inFileAddr + (i * PageSize));
+    // }
 
-    if (noffH.initData.size > 0) {
-        for (i = 0; i < numPages; i++)
-            executable->ReadAt(
-                &(kernel->machine->mainMemory[noffH.initData.virtualAddr]) +
-                    (pageTable[i].physicalPage * PageSize),
-                PageSize, noffH.initData.inFileAddr + (i * PageSize));
-    }
+    // if (noffH.initData.size > 0) {
+    //     for (i = 0; i < numPages; i++)
+    //         executable->ReadAt(
+    //             &(kernel->machine->mainMemory[noffH.initData.virtualAddr]) +
+    //                 (pageTable[i].physicalPage * PageSize),
+    //             PageSize, noffH.initData.inFileAddr + (i * PageSize));
+    // }    
 
     kernel->addrLock->V();
     delete executable;
@@ -308,4 +309,45 @@ ExceptionType AddrSpace::Translate(unsigned int vaddr, unsigned int *paddr,
     //  ", paddr: " << *paddr << "\n";
 
     return NoException;
+}
+
+
+void AddrSpace::addPageEntry( unsigned int badVAddr)
+{ 
+    NoffHeader noffH;
+    unsigned int vpn = badVAddr / PageSize;
+    // cout << vpn << endl;
+//     pageTable[vpn].virtualPage = vpn; 
+        pageTable[vpn].physicalPage = kernel->gPhysPageBitMap->FindAndSet();
+        pageTable[vpn].valid = TRUE;
+        // pageTable[vpn].use = FALSE;
+        // pageTable[vpn].dirty = FALSE;
+        // pageTable[vpn].readOnly = FALSE; 
+        // bzero(&(kernel->machine
+        //             ->mainMemory[pageTable[vpn].physicalPage * PageSize]),
+        //       PageSize);
+        // cout << fileNameMain << endl;
+    OpenFile *executable = kernel->fileSystem->Open(fileNameMain);
+    executable->ReadAt((char *)&noffH, sizeof(noffH), 0);
+    if (noffH.code.size + noffH.code.virtualAddr>=badVAddr && badVAddr>=noffH.code.virtualAddr) {
+     //  cout<<badVAddr<<" "<<noffH.code.size<<" "<<noffH.code.virtualAddr<<endl;
+            {
+                executable->ReadAt(
+                &(kernel->machine->mainMemory[noffH.code.virtualAddr]) +
+                    (pageTable[vpn].physicalPage * PageSize),
+                PageSize, noffH.code.inFileAddr + (vpn * PageSize));
+            }
+    }
+    if (noffH.initData.size + noffH.initData.virtualAddr >=badVAddr && badVAddr>=noffH.initData.virtualAddr && noffH.initData.size > 0 ) {
+       //  cout<<badVAddr<<" "<<noffH.initData.size<<" "<<noffH.initData.virtualAddr<<endl;
+        {
+            executable->ReadAt(
+                &(kernel->machine->mainMemory[noffH.initData.virtualAddr]) +
+                    (pageTable[vpn].physicalPage * PageSize),
+                PageSize, noffH.initData.inFileAddr + (vpn * PageSize));
+        }
+    }
+   // cout<<noffH.initData.size<<endl;
+ //   printf("%u %u\n",noffH.code.virtualAddr, noffH.initData.virtualAddr );
+   // cout<<"everything done added pagetable entry"<<" "<<"vpn value:"<<vpn<<" "<<badVAddr<<endl;
 }

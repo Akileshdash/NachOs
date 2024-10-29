@@ -467,7 +467,15 @@ void ExceptionHandler(ExceptionType which) {
             kernel->interrupt->setStatus(SystemMode);
             DEBUG(dbgSys, "Switch to system mode\n");
             break;
-        case PageFaultException:
+        case PageFaultException:{
+            // code added by me
+            cout<<"PageExecuption Found"<<endl;
+            unsigned int badVAddr1 = kernel->machine->ReadRegister(39);
+            cout << badVAddr1 << endl;
+            kernel->currentThread->space->addPageEntry(badVAddr1);
+            return;
+            // code added by me ends here
+            }
         case ReadOnlyException:
         case BusErrorException:
         case AddressErrorException:
